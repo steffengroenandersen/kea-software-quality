@@ -89,18 +89,21 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
 ## Testing Strategy & Tools
 
 ### 1. Review (SRS & Formal Review)
+- **Location:** `task-1-review/`
 - **Tool:** Manual review process
 - **Deliverable:**
   - SRS document (PDF) - Software Requirements Specification
   - Review report (PDF) with roles assigned
 
 ### 2. Risk Assessment
+- **Location:** `task-2-risk-assessment/`
 - **Tool:** Manual risk analysis
 - **Deliverable:**
   - Risk tables (initial, mid-development, final)
   - Risk matrices at different project phases
 
 ### 3. Black-Box Test Design
+- **Location:** `task-3-black-box-test-design/`
 - **Techniques:**
   - Equivalence Partitioning (animal types: valid/invalid/empty, count: 1/10)
   - Boundary Value Analysis (count boundaries, input length)
@@ -108,6 +111,7 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
 - **Deliverable:** PDF with all analyses
 
 ### 4. Static Testing & White-Box Design
+- **Location:** `task-4-static-testing-tools-and-white-box-test-design/`
 - **Tools:**
   - **SonarQube/SonarCloud** - Code quality, complexity, security analysis
   - **ESLint** - TypeScript linting
@@ -118,6 +122,7 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
   - Coverage report showing how it guided unit test design
 
 ### 5. Unit & Integration Testing
+- **Location:** `task-5-unit-testing-and-integration-testing/` and `backend/tests/`
 - **Framework:** Jest
 - **Language:** TypeScript
 - **Test Types:**
@@ -131,6 +136,7 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
 - **Deliverable:** Source code of tests
 
 ### 6. Continuous Testing (CI/CD)
+- **Location:** `task-6-continuous-testing/`
 - **Platform:** GitHub Actions
 - **Pipeline:**
   - Run on every push and pull request
@@ -143,6 +149,7 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
   - CI output logs (text file or screenshot)
 
 ### 7. API Testing
+- **Location:** `task-7-api-testing/`
 - **Tool:** Postman
 - **Tests:**
   - Test all endpoints (GET, POST)
@@ -156,6 +163,7 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
   - Postman environment (JSON)
 
 ### 8. End-to-End UI Testing
+- **Location:** `task-8-end-to-end-ui-testing/`
 - **Framework:** Playwright
 - **Language:** TypeScript
 - **Tests:**
@@ -166,6 +174,7 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
 - **Deliverable:** Source code of E2E tests
 
 ### 9. Performance Testing
+- **Location:** `task-9-stress-performance-testing/`
 - **Tool:** Apache JMeter
 - **Test Types:**
   - **Load Testing:** Simulate normal user load (50-100 concurrent users)
@@ -179,6 +188,7 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
 - **Deliverable:** JMeter test reports (screenshots/PDFs)
 
 ### 10. Usability Testing
+- **Location:** `task-10-usability-testing/`
 - **Approach:** Design only (not conducted)
 - **Deliverable:**
   - Preference measures (satisfaction, ease of use)
@@ -480,26 +490,16 @@ pet-name-generator/
 │   │   ├── 01-schema.sql         # Database schema
 │   │   └── 02-seed-data.sql      # Seed popular_names with fake test data
 │   └── README.md
-├── tests/
-│   └── e2e/                      # Playwright E2E tests
-│       ├── nameGeneration.spec.ts
-│       ├── favorites.spec.ts
-│       ├── userFlow.spec.ts
-│       └── playwright.config.ts
-├── postman/                      # API tests
-│   ├── collection.json
-│   └── environment.json
-├── jmeter/                       # Performance tests
-│   ├── pet-name-load-test.jmx
-│   ├── stress-test.jmx
-│   └── spike-test.jmx
-├── docs/                         # Documentation & deliverables
-│   ├── srs.pdf
-│   ├── review-report.pdf
-│   ├── risk-assessment.pdf
-│   ├── black-box-tests.pdf
-│   ├── static-testing.pdf
-│   └── usability-test-plan.pdf
+├── task-1-review/               # Task 1: Review deliverables
+├── task-2-risk-assessment/      # Task 2: Risk assessment deliverables
+├── task-3-black-box-test-design/  # Task 3: Black-box test design
+├── task-4-static-testing-tools-and-white-box-test-design/  # Task 4: Static testing
+├── task-5-unit-testing-and-integration-testing/  # Task 5: Unit & integration tests
+├── task-6-continuous-testing/   # Task 6: CI/CD deliverables
+├── task-7-api-testing/          # Task 7: API testing (Postman collections)
+├── task-8-end-to-end-ui-testing/  # Task 8: E2E testing (Playwright source code)
+├── task-9-stress-performance-testing/  # Task 9: Performance testing (JMeter reports)
+├── task-10-usability-testing/   # Task 10: Usability testing
 ├── .github/
 │   └── workflows/
 │       └── ci.yml                # GitHub Actions workflow

@@ -172,59 +172,71 @@ Database initialization scripts are in `database/init/` and run automatically wh
 This project implements 10 different testing methodologies as required by the assignment:
 
 ### 1. Review (SRS & Formal Review)
-- Location: `docs/srs.pdf` and `docs/review-report.pdf`
+- Location: `task-1-review/`
 - User stories defined in `user-stories.md`
+- Deliverables: SRS (PDF) and review report (PDF)
 
 ### 2. Risk Assessment
-- Location: `docs/risk-assessment.pdf`
+- Location: `task-2-risk-assessment/`
 - Includes risk tables and matrices at different project phases
+- Deliverable: Risk assessment (PDF)
 
 ### 3. Black-Box Test Design
-- Location: `docs/black-box-tests.pdf`
+- Location: `task-3-black-box-test-design/`
 - Techniques used:
   - **Equivalence Partitioning:** Animal types (valid/invalid/empty), count values (1/10)
   - **Boundary Value Analysis:** Count boundaries (0, 1, 10, 11), input length limits
   - **Decision Tables:** Animal type × checkbox combinations
+- Deliverable: Black-box tests (PDF)
 
 ### 4. Static Testing & White-Box Design
+- Location: `task-4-static-testing-tools-and-white-box-test-design/`
 - Tools: SonarQube/SonarCloud, ESLint, TypeScript compiler
 - Code coverage: Jest with Istanbul
-- Location: `docs/static-testing.pdf`
+- Deliverable: Static testing reports (PDF) + coverage report
 
 ### 5. Unit & Integration Testing
+- Location: `task-5-unit-testing-and-integration-testing/` and `backend/tests/`
 - Framework: Jest with TypeScript
-- Location: `backend/tests/`
-  - `unit/` - Unit tests for individual functions
-  - `integration/` - API endpoint tests with database interactions
+- Test locations:
+  - `backend/tests/unit/` - Unit tests for individual functions
+  - `backend/tests/integration/` - API endpoint tests with database interactions
 - **Critical requirement:** All black-box test cases must be implemented as parameterized unit tests
 - Mock external Faker.js API calls in unit tests
+- Deliverable: Source code of tests
 
 ### 6. Continuous Testing (CI/CD)
+- Location: `task-6-continuous-testing/`
 - Platform: GitHub Actions
-- Location: `.github/workflows/ci.yml`
+- Location of workflow: `.github/workflows/ci.yml`
 - Runs on every push: linting, type checking, tests, coverage
+- Deliverable: CI/CD workflow file + output logs
 
 ### 7. API Testing
+- Location: `task-7-api-testing/`
 - Tool: Postman
-- Location: `postman/collection.json` and `postman/environment.json`
 - Tests HTTP status codes, JSON structure, response times, positive/negative cases
+- Deliverable: Postman collection (JSON) and environment (JSON)
 
 ### 8. End-to-End UI Testing
+- Location: `task-8-end-to-end-ui-testing/`
 - Framework: Playwright with TypeScript
-- Location: `tests/e2e/`
 - Tests complete user flows across frontend and backend services
 - Multi-browser testing (Chromium, Firefox, WebKit)
+- Deliverable: E2E test source code
 
 ### 9. Performance Testing
+- Location: `task-9-stress-performance-testing/`
 - Tool: Apache JMeter
-- Location: `jmeter/`
 - Test types: Load testing, stress testing, spike testing
 - Metrics: Response time, throughput, error rate
+- Deliverable: JMeter test reports (screenshots/PDFs)
 
 ### 10. Usability Testing
-- Location: `docs/usability-test-plan.pdf`
+- Location: `task-10-usability-testing/`
 - Design only (not conducted)
 - Includes preference/performance measures and test scenarios
+- Deliverable: Usability test plan (PDF)
 
 ## Key Implementation Notes
 
