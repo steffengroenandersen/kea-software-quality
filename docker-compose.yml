@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:15-alpine
+    container_name: pet-name-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=petnames
+      - POSTGRES_USER=petuser
+      - POSTGRES_PASSWORD=petpass
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - pet-name-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U petuser -d petnames"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: pet-name-backend
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_NAME=petnames
+      - DB_USER=petuser
+      - DB_PASSWORD=petpass
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - pet-name-network
+
+  frontend:
+    build: ./frontend
+    container_name: pet-name-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - BACKEND_API_URL=http://backend:4000
+    depends_on:
+      - backend
+    networks:
+      - pet-name-network
+
+networks:
+  pet-name-network:
+    driver: bridge
+
+volumes:
+  postgres-data:

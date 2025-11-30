@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recent Generated Names</title>
+</head>
+<body>
+  <h1>Pet Name Generator</h1>
+
+  <div>
+    <h2>Recent Generated Names</h2>
+    <p>View the 10 most recent pet names that have been generated</p>
+
+    <button id="refreshBtn">Refresh List</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const refreshBtn = document.getElementById('refreshBtn');
+    const resultDiv = document.getElementById('result');
+    const BACKEND_URL = 'http://localhost:4000';
+
+    async function loadRecentNames() {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/recent-names`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.names && data.names.length > 0) {
+          const namesList = data.names.map((entry, index) => {
+            const animalType = entry.animal_type || 'Generic';
+            const date = new Date(entry.created_at).toLocaleString();
+            return `
+              <li>
+                <strong>${entry.name}</strong>
+                (${animalType})
+                - <small>${date}</small>
+              </li>
+            `;
+          }).join('');
+
+          resultDiv.innerHTML = `
+            <p><strong>Found ${data.count} recent names:</strong></p>
+            <ol>${namesList}</ol>
+          `;
+        } else if (data.success && data.names.length === 0) {
+          resultDiv.innerHTML = `<p>No recent names found. Generate some names to see them here!</p>`;
+        } else {
+          resultDiv.innerHTML = `<p style="color: red;">Error: ${data.message || 'Failed to load recent names'}</p>`;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        resultDiv.innerHTML = `<p style="color: red;">Error: Failed to connect to server</p>`;
+      }
+    }
+
+    // Load recent names on page load
+    loadRecentNames();
+
+    // Reload on button click
+    refreshBtn.addEventListener('click', loadRecentNames);
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate Pet Name</title>
+</head>
+<body>
+  <h1>Pet Name Generator</h1>
+
+  <div>
+    <h2>Generate Popular Pet Name</h2>
+    <button id="generateBtn">Generate Name</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const generateBtn = document.getElementById('generateBtn');
+    const resultDiv = document.getElementById('result');
+    const BACKEND_URL = 'http://localhost:4000';
+
+    generateBtn.addEventListener('click', async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/generate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ count: 1 })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.names && data.names.length > 0) {
+          resultDiv.innerHTML = `<p><strong>Generated Name:</strong> ${data.names[0]}</p>`;
+        } else {
+          resultDiv.innerHTML = `<p>Error: ${data.message || 'Failed to generate name'}</p>`;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        resultDiv.innerHTML = `<p>Error: Failed to connect to server</p>`;
+      }
+    });
+  </script>
+</body>
+</html>

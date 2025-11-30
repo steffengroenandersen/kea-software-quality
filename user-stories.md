@@ -89,5 +89,33 @@
 
 ---
 
+## User Story 4: View Recent Generated Names
+
+**As a** user
+**I want to** see the 10 most recent pet names that have been generated
+**So that** I can review previously generated names and get inspiration
+
+### Acceptance Criteria
+
+**Scenario 1: View recent names when history exists**
+- **Given** pet names have been previously generated
+- **When** I navigate to the recent names page
+- **Then** I should see a list of the 10 most recent pet names that were generated
+- **And** the names should be ordered from most recent to oldest
+
+**Scenario 2: View recent names when no history exists**
+- **Given** no pet names have been generated yet
+- **When** I navigate to the recent names page
+- **Then** I should see a message saying "No recent names found. Generate some names to see them here!"
+
+**Scenario 3: Refresh recent names list**
+- **Given** I am viewing the recent names page
+- **When** I generate a new pet name using any generation method
+- **And** I return to the recent names page
+- **Then** the new name should appear at the top of the list
+- **And** if there were already 10 names, the oldest name should be removed from the display
+
+---
+
 **Created:** 2025-11-26
 **Author:** Steff

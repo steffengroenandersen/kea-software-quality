@@ -16,9 +16,10 @@ A simple web application that generates creative pet names based on user prefere
 ### Core Functionality
 A simple pet name generator with the following features:
 
-1. **Basic Name Generation** - Click a button to generate a random popular pet name
-2. **Animal-Specific Names** - Enter an animal type (Dog, Cat, Bird, Fish, Hamster, Rabbit) in a text field to get animal-specific suggestions
-3. **Multiple Suggestions** - Check a "Get 10 names" checkbox to receive 10 name suggestions instead of 1
+1. **Basic Name Generation** - Click a button to generate a random popular pet name (User Story 1)
+2. **Animal-Specific Names** - Enter an animal type (Dog, Cat, Bird, Fish, Hamster, Rabbit) to get animal-specific suggestions (User Story 2)
+3. **Bulk Generation** - Generate 10 name suggestions at once (User Story 3)
+4. **Recent Names** - View the 10 most recent generated names (User Story 4)
 
 **Supported Animal Types:** Dog, Cat, Bird, Fish, Hamster, Rabbit
 
@@ -40,10 +41,10 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
 ### Frontend Service
 - **Runtime:** Node.js (v18+)
 - **Framework:** Express.js (serving static files)
-- **Language:** TypeScript
+- **Language:** JavaScript (ES Modules)
 - **UI:** Vanilla HTML with basic forms
 - **Styling:** None (minimal/browser default)
-- **JavaScript:** Minimal vanilla JS for API calls (fetch/axios)
+- **JavaScript:** Vanilla JS for API calls (fetch)
 - **Port:** 3000
 - **Purpose:** Serves HTML pages and makes HTTP requests to backend API
 - **Docker:** Separate container
@@ -51,7 +52,7 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
 ### Backend Service
 - **Runtime:** Node.js (v18+)
 - **Framework:** Express.js
-- **Language:** TypeScript
+- **Language:** JavaScript (ES Modules)
 - **Architecture:** REST API
 - **Port:** 4000 (internal), exposed to frontend via Docker network
 - **Purpose:** Business logic, database operations, external API integration
@@ -68,14 +69,11 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
   - `generated_names` (id, animal_type, name, count, created_at)
 
 ### External API
-- **API:** Faker.js API (https://fakerjs.dev/api/)
-- **Purpose:** Generate random pet names, words, and data
-- **Integration:** Called from backend service only
-- **Endpoints Used:**
-  - `/api/person/firstName` - for human-like names
-  - `/api/animal/type` - for animal types
-  - `/api/word/adjective` - for name variations
-  - `/api/number/int` - for randomization
+- **Library:** @faker-js/faker (npm package)
+- **Purpose:** Generate random pet names
+- **Integration:** Imported and used in backend service
+- **Methods Used:**
+  - `faker.person.firstName()` - for generating pet names
 
 ### Docker & Orchestration
 - **Docker Compose:** Orchestrates all 3 containers
@@ -194,7 +192,11 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
 ### Frontend Service (Port 3000)
 | Method | Endpoint | Description | Response |
 |--------|----------|-------------|----------|
-| GET | `/` | Home page with generation form | HTML |
+| GET | `/` | Home page with links to all features | HTML |
+| GET | `/generate` | Generate single popular pet name (User Story 1) | HTML |
+| GET | `/generate-by-animal-type` | Generate name by animal type (User Story 2) | HTML |
+| GET | `/generate-bulk` | Generate 10 names at once (User Story 3) | HTML |
+| GET | `/recent-names` | View 10 most recent generated names (User Story 4) | HTML |
 
 **Note:** Frontend makes HTTP requests to backend API at `http://backend:4000/api/*`
 
@@ -203,11 +205,16 @@ See `user-stories.md` for complete user stories with Given-When-Then acceptance 
 | Method | Endpoint | Description | Request Body | Response |
 |--------|----------|-------------|--------------|----------|
 | GET | `/health` | Health check | - | `{status: "ok"}` |
-| POST | `/api/generate` | Generate pet names | `{animalType?: string, count: number}` | `{success: boolean, names: string[], message?: string}` |
+| POST | `/api/generate` | Generate 1 popular pet name (User Story 1) | `{count: number}` | `{success: boolean, names: string[], message: string}` |
+| POST | `/api/generate-by-animal-type` | Generate name by animal type (User Story 2) | `{animalType?: string}` | `{success: boolean, names: string[], message: string}` |
+| POST | `/api/generate-bulk` | Generate 10 names at once (User Story 3) | `{}` | `{success: boolean, names: string[], message: string}` |
+| GET | `/api/recent-names` | Get 10 most recent generated names (User Story 4) | - | `{success: boolean, names: array, count: number}` |
 
 **Request Body Details:**
-- `animalType` (optional): "Dog", "Cat", "Bird", "Fish", "Hamster", "Rabbit", or empty for generic
-- `count`: 1 or 10 (number of names to generate)
+- `/api/generate`: `count` defaults to 1
+- `/api/generate-by-animal-type`: `animalType` optional - "Dog", "Cat", "Bird", "Fish", "Hamster", "Rabbit", or empty for generic
+- `/api/generate-bulk`: No body required, always generates 10 names
+- `/api/recent-names`: GET request, no body
 
 **Response Examples:**
 

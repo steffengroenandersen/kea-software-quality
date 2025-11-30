@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate Pet Name by Animal Type</title>
+</head>
+<body>
+  <h1>Pet Name Generator</h1>
+
+  <div>
+    <h2>Choose Animal Type</h2>
+    <p>Supported animals: Dog, Cat, Bird, Fish, Hamster, Rabbit</p>
+
+    <label for="animalType">Animal Type:</label>
+    <input type="text" id="animalType" placeholder="e.g., Dog, Cat, Bird...">
+
+    <button id="generateBtn">Generate Name</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const generateBtn = document.getElementById('generateBtn');
+    const animalTypeInput = document.getElementById('animalType');
+    const resultDiv = document.getElementById('result');
+    const BACKEND_URL = 'http://localhost:4000';
+
+    generateBtn.addEventListener('click', async () => {
+      const animalType = animalTypeInput.value.trim();
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/generate-by-animal-type`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ animalType: animalType || undefined })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.names && data.names.length > 0) {
+          const animalTypeText = animalType ? ` for ${animalType}` : ' (generic)';
+          resultDiv.innerHTML = `<p><strong>Generated Name${animalTypeText}:</strong> ${data.names[0]}</p>`;
+        } else {
+          resultDiv.innerHTML = `<p style="color: red;">Error: ${data.message || 'Failed to generate name'}</p>`;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        resultDiv.innerHTML = `<p style="color: red;">Error: Failed to connect to server</p>`;
+      }
+    });
+  </script>
+</body>
+</html>

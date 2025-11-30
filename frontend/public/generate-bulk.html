@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate 10 Pet Names</title>
+</head>
+<body>
+  <h1>Pet Name Generator</h1>
+
+  <div>
+    <h2>Get Multiple Name Suggestions</h2>
+    <p>Generate 10 pet names at once for more options to choose from</p>
+
+    <button id="generateBtn">Generate 10 Names</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const generateBtn = document.getElementById('generateBtn');
+    const resultDiv = document.getElementById('result');
+    const BACKEND_URL = 'http://localhost:4000';
+
+    generateBtn.addEventListener('click', async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/generate-bulk`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({})
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.names && data.names.length > 0) {
+          const namesList = data.names.map((name, index) =>
+            `<li>${index + 1}. ${name}</li>`
+          ).join('');
+          resultDiv.innerHTML = `
+            <p><strong>Generated ${data.names.length} Names:</strong></p>
+            <ul>${namesList}</ul>
+          `;
+        } else {
+          resultDiv.innerHTML = `<p style="color: red;">Error: ${data.message || 'Failed to generate names'}</p>`;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        resultDiv.innerHTML = `<p style="color: red;">Error: Failed to connect to server</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
