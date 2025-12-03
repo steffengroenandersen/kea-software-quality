@@ -1,8 +1,5 @@
 import { faker } from '@faker-js/faker';
 
-// Supported animal types
-const SUPPORTED_ANIMALS = ['Dog', 'Cat', 'Bird', 'Fish', 'Hamster', 'Rabbit'];
-
 /**
  * Generate pet names using Faker.js
  * @param {number} count - Number of names to generate
@@ -20,41 +17,107 @@ export function generatePetNames(count = 1) {
 }
 
 /**
- * Validate if the animal type is supported
- * @param {string} animalType - The animal type to validate
- * @returns {boolean} - True if supported, false otherwise
+ * Check if Faker.js has an animal method for the given animal type
+ * @param {string} animalType - The animal type to check (e.g., 'dog', 'cat')
+ * @returns {boolean} - True if faker.animal has a method for this type
  */
-function isValidAnimalType(animalType) {
-  if (!animalType) return true; // Empty is valid (returns generic)
-  return SUPPORTED_ANIMALS.some(
-    animal => animal.toLowerCase() === animalType.toLowerCase()
-  );
+function hasFakerAnimalMethod(animalType) {
+  const normalizedType = animalType.toLowerCase();
+  return typeof faker.animal[normalizedType] === 'function' && normalizedType !== 'petname' && normalizedType !== 'type';
 }
 
 /**
- * Generate pet names by animal type using Faker.js
- * @param {string} animalType - The type of animal (Dog, Cat, Bird, Fish, Hamster, Rabbit)
- * @returns {object} - Object with success status, names array, and optional message
+ * Validate animal type against character-based rules
+ * @param {string} animalType - The animal type to validate
+ * @returns {object} - Object with valid boolean and optional error message
  */
-export function generatePetNamesByAnimalType(animalType) {
-  // Validate animal type
-  if (animalType && !isValidAnimalType(animalType)) {
+function validateAnimalType(animalType) {
+  // Check if empty/null/undefined
+  if (!animalType || animalType.trim() === '') {
     return {
-      success: false,
-      names: [],
-      message: 'Animal type not supported. Please use: Dog, Cat, Bird, Fish, Hamster, or Rabbit'
+      valid: false,
+      message: 'Animal type is required and cannot be empty'
     };
   }
 
-  // Generate name (could be customized per animal type in the future)
-  const petName = faker.person.firstName();
+  const trimmed = animalType.trim();
+
+  // Check minimum length (2 characters)
+  if (trimmed.length < 2) {
+    return {
+      valid: false,
+      message: 'Animal type must be at least 2 characters long'
+    };
+  }
+
+  // Check maximum length (42 characters)
+  if (trimmed.length > 42) {
+    return {
+      valid: false,
+      message: 'Animal type cannot exceed 42 characters'
+    };
+  }
+
+  // Check for numeric values
+  if (/\d/.test(trimmed)) {
+    return {
+      valid: false,
+      message: 'Animal type cannot contain numeric values'
+    };
+  }
+
+  // Check for non-alphabetic characters (only letters allowed)
+  if (!/^[a-zA-Z]+$/.test(trimmed)) {
+    return {
+      valid: false,
+      message: 'Animal type can only contain alphabetic characters (no spaces or special characters)'
+    };
+  }
+
+  // Check if Faker.js supports this animal type
+  if (!hasFakerAnimalMethod(trimmed)) {
+    return {
+      valid: false,
+      message: `Animal type '${trimmed}' is not supported by the Faker.js API`
+    };
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Generate pet names by animal type using Faker.js animal API
+ * @param {string} animalType - The type of animal (must be supported by faker.animal)
+ * @returns {object} - Object with success status, names array, and optional message
+ */
+export function generatePetNamesByAnimalType(animalType) {
+  // Validate animal type using character-based rules AND Faker API check
+  const validation = validateAnimalType(animalType);
+
+  if (!validation.valid) {
+    return {
+      success: false,
+      names: [],
+      message: validation.message
+    };
+  }
+
+  // Trim and normalize the animal type
+  const normalizedAnimalType = animalType.trim().toLowerCase();
+
+  // Generate pet name using faker.animal.petName()
+  const petName = faker.animal.petName();
+
+  // Get breed/species using animal-specific faker method
+  const breedOrSpecies = faker.animal[normalizedAnimalType]();
+
+  // Combine into composite name: "Coco the Golden Retriever"
+  const compositeName = `${petName} the ${breedOrSpecies}`;
 
   return {
     success: true,
-    names: [petName],
-    message: animalType
-      ? `Name generated for ${animalType}`
-      : 'Generic name generated'
+    names: [compositeName],
+    message: `Name generated for ${animalType.trim()}`
   };
 }
 

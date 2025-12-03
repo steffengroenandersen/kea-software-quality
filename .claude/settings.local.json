@@ -12,7 +12,12 @@
       "Bash(cat:*)",
       "Bash(find:*)",
       "Bash(git -C /c/Users/Steffen/Documents/GitHub/kea-software-quality log --oneline -10)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(docker-compose ps:*)",
+      "Bash(npm install)",
+      "Bash(npm test)",
+      "Bash(npm run test:coverage:*)",
+      "Bash(npm test:*)"
     ],
     "deny": [],
     "ask": []
