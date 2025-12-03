@@ -114,7 +114,7 @@ GitHub Actions pipeline (to be implemented):
 | GET | `/` | Home page with links to all features | - |
 | GET | `/generate` | Generate single popular pet name | User Story 1 |
 | GET | `/generate-by-animal-type` | Generate name by animal type | User Story 2 |
-| GET | `/generate-bulk` | Generate 10 names at once | User Story 3 |
+| GET | `/generate-bulk` | Generate 1-10 names (configurable) | User Story 3 |
 | GET | `/recent-names` | View 10 most recent generated names | User Story 4 |
 
 ### Backend REST API (Port 4000)
@@ -124,7 +124,7 @@ GitHub Actions pipeline (to be implemented):
 | GET | `/health` | Health check | - | `{status: "ok"}` |
 | POST | `/api/generate` | Generate 1 popular pet name (User Story 1) | `{count: number}` | `{success: boolean, names: string[], message: string}` |
 | POST | `/api/generate-by-animal-type` | Generate name by animal type (User Story 2) | `{animalType?: string}` | `{success: boolean, names: string[], message: string}` |
-| POST | `/api/generate-bulk` | Generate 10 names at once (User Story 3) | `{}` | `{success: boolean, names: string[], message: string}` |
+| POST | `/api/generate-bulk` | Generate 1-10 names (User Story 3) | `{count: number}` (1-10 inclusive) | `{success: boolean, names: string[], message: string}` |
 | GET | `/api/recent-names` | Get 10 most recent generated names (User Story 4) | - | `{success: boolean, names: array, count: number}` |
 
 **Supported animal types:** Dog, Cat, Bird, Fish, Hamster, Rabbit (case-insensitive)
@@ -137,11 +137,39 @@ curl -X POST http://localhost:4000/api/generate -H "Content-Type: application/js
 # User Story 2: Generate name for Dog
 curl -X POST http://localhost:4000/api/generate-by-animal-type -H "Content-Type: application/json" -d '{"animalType": "Dog"}'
 
-# User Story 3: Generate 10 names
-curl -X POST http://localhost:4000/api/generate-bulk -H "Content-Type: application/json" -d '{}'
+# User Story 3: Generate 5 names (configurable between 1-10)
+curl -X POST http://localhost:4000/api/generate-bulk -H "Content-Type: application/json" -d '{"count": 5}'
+
+# User Story 3: Generate 10 names (maximum)
+curl -X POST http://localhost:4000/api/generate-bulk -H "Content-Type: application/json" -d '{"count": 10}'
 
 # User Story 4: Get recent names
 curl http://localhost:4000/api/recent-names
+```
+
+**Validation rules for `/api/generate-bulk`:**
+- `count` is required
+- `count` must be a number
+- `count` must be a whole number (integer)
+- `count` must be at least 1
+- `count` cannot exceed 10
+
+**Error responses for `/api/generate-bulk`:**
+```bash
+# Missing count
+{"success": false, "names": [], "message": "Count is required"}
+
+# Non-numeric count
+{"success": false, "names": [], "message": "Count must be a number"}
+
+# Non-integer count (e.g., 5.5)
+{"success": false, "names": [], "message": "Count must be a whole number"}
+
+# Count below minimum (e.g., 0 or negative)
+{"success": false, "names": [], "message": "Count must be at least 1"}
+
+# Count above maximum (e.g., 11)
+{"success": false, "names": [], "message": "Count cannot exceed 10"}
 ```
 
 ## Database Schema

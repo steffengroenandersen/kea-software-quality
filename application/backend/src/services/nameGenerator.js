@@ -59,13 +59,58 @@ export function generatePetNamesByAnimalType(animalType) {
 }
 
 /**
- * Generate multiple pet names in bulk (10 names)
- * @returns {object} - Object with success status and array of 10 names
+ * Generate multiple pet names in bulk (1-10 names)
+ * @param {number} count - Number of names to generate (1-10)
+ * @returns {object} - Object with success status, names array, and message
  */
-export function generateBulkPetNames() {
-  const names = [];
-  const count = 10;
+export function generateBulkPetNames(count) {
+  // Validation: Check if count is provided
+  if (count === undefined || count === null) {
+    return {
+      success: false,
+      names: [],
+      message: 'Count is required'
+    };
+  }
 
+  // Validation: Check if count is a number
+  if (typeof count !== 'number' || isNaN(count)) {
+    return {
+      success: false,
+      names: [],
+      message: 'Count must be a number'
+    };
+  }
+
+  // Validation: Check if count is an integer
+  if (!Number.isInteger(count)) {
+    return {
+      success: false,
+      names: [],
+      message: 'Count must be a whole number'
+    };
+  }
+
+  // Validation: Check minimum value
+  if (count < 1) {
+    return {
+      success: false,
+      names: [],
+      message: 'Count must be at least 1'
+    };
+  }
+
+  // Validation: Check maximum value
+  if (count > 10) {
+    return {
+      success: false,
+      names: [],
+      message: 'Count cannot exceed 10'
+    };
+  }
+
+  // Generate names
+  const names = [];
   for (let i = 0; i < count; i++) {
     const petName = faker.person.firstName();
     names.push(petName);
@@ -74,6 +119,6 @@ export function generateBulkPetNames() {
   return {
     success: true,
     names: names,
-    message: `Generated ${count} pet names`
+    message: `Generated ${count} pet name${count !== 1 ? 's' : ''}`
   };
 }

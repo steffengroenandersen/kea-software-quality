@@ -54,38 +54,61 @@
 
 ---
 
-## User Story 3: Get Multiple Name Suggestions
+## User Story 3: Get Multiple Name Suggestions (1-10)
 
 **As a** user
-**I want to** be able to get 10 name suggestions at once
-**So that** I have more options to choose from
+**I want to** be able to specify how many name suggestions I want (between 1 and 10)
+**So that** I have the flexibility to get exactly the number of options I need
 
 ### Acceptance Criteria
 
-**Scenario 1: Generate single name (default)**
-- **Given** I am on the pet name generator page
-- **And** The "Get 10 names" checkbox is not checked
-- **When** I click the "Generate Name" button
+**Scenario 1: Generate names with valid count**
+- **Given** I am on the multiple name suggestions page
+- **When** I enter a number between 1 and 10 in the count field
+- **And** I click the "Generate Names" button
+- **Then** I should see exactly that many randomly generated pet names displayed
+
+**Scenario 2: Generate 1 name (minimum boundary)**
+- **Given** I am on the multiple name suggestions page
+- **When** I enter "1" in the count field
+- **And** I click the "Generate Names" button
 - **Then** I should see 1 randomly generated pet name displayed
 
-**Scenario 2: Generate 10 names**
-- **Given** I am on the pet name generator page
-- **When** I check the "Get 10 names" checkbox
-- **And** I click the "Generate Name" button
+**Scenario 3: Generate 10 names (maximum boundary)**
+- **Given** I am on the multiple name suggestions page
+- **When** I enter "10" in the count field
+- **And** I click the "Generate Names" button
 - **Then** I should see 10 randomly generated pet names displayed
 
-**Scenario 3: Generate 10 names for specific animal type**
-- **Given** I am on the pet name generator page
-- **When** I enter a valid animal type in the text field (e.g., "Dog")
-- **And** I check the "Get 10 names" checkbox
-- **And** I click the "Generate Name" button
-- **Then** I should see 10 randomly generated names appropriate for that animal type
+**Scenario 4: Attempt to generate with count below minimum (0)**
+- **Given** I am on the multiple name suggestions page
+- **When** I enter "0" in the count field
+- **And** I click the "Generate Names" button
+- **Then** I should see an error message "Count must be at least 1"
 
-**Scenario 4: Switch from 10 names to 1 name**
-- **Given** I have generated 10 names with the checkbox checked
-- **When** I uncheck the "Get 10 names" checkbox
-- **And** I click the "Generate Name" button
-- **Then** I should see only 1 randomly generated pet name displayed
+**Scenario 5: Attempt to generate with count above maximum (11)**
+- **Given** I am on the multiple name suggestions page
+- **When** I enter "11" in the count field
+- **And** I click the "Generate Names" button
+- **Then** I should see an error message "Count cannot exceed 10"
+
+**Scenario 6: Attempt to generate with non-integer count**
+- **Given** I am on the multiple name suggestions page
+- **When** I enter "5.5" in the count field
+- **And** I click the "Generate Names" button
+- **Then** I should see an error message "Count must be a whole number"
+
+**Scenario 7: Attempt to generate with non-numeric count**
+- **Given** I am on the multiple name suggestions page
+- **When** I enter "abc" in the count field
+- **And** I click the "Generate Names" button
+- **Then** I should see an error message "Count must be a number"
+
+**Scenario 8: Attempt to generate without providing count**
+- **Given** I am on the multiple name suggestions page
+- **When** I clear the count field (leaving it empty)
+- **And** I click the "Generate Names" button
+- **Then** I should see an error message "Count is required"
 
 ---
 
