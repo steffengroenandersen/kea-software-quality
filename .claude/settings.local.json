@@ -18,7 +18,8 @@
       "Bash(npm test)",
       "Bash(npm run test:coverage:*)",
       "Bash(npm test:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(npx playwright install:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,33 @@
+{
+  "name": "pet-name-generator-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-End UI tests for Pet Name Generator using Playwright",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:user-story-1": "playwright test user-story-1-generate-single-name.spec.ts",
+    "test:user-story-2": "playwright test user-story-2-generate-by-animal-type.spec.ts",
+    "test:user-story-3": "playwright test user-story-3-generate-bulk-names.spec.ts",
+    "test:user-story-4": "playwright test user-story-4-recent-names.spec.ts",
+    "report": "playwright show-report",
+    "install-browsers": "playwright install --with-deps"
+  },
+  "keywords": [
+    "e2e",
+    "playwright",
+    "testing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  }
+}

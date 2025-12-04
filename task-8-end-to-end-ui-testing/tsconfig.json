@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@page-objects/*": ["./page-objects/*"],
+      "@fixtures/*": ["./fixtures/*"],
+      "@utils/*": ["./utils/*"]
+    },
+    "types": ["node", "@playwright/test"]
+  },
+  "include": [
+    "specs/**/*.ts",
+    "page-objects/**/*.ts",
+    "fixtures/**/*.ts",
+    "utils/**/*.ts",
+    "playwright.config.ts"
+  ]
+}
