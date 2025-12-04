@@ -1,0 +1,944 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "Pet Name Generator API",
+		"description": "Comprehensive API tests for Pet Name Generator application covering all 5 endpoints with validation, boundary testing, and error handling",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Health Check",
+			"item": [
+				{
+					"name": "GET /health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"});",
+									"",
+									"pm.test(\"Status is 'ok'\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql('ok');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"pm.test(\"Content-Type is application/json\", function () {",
+									"    pm.response.to.have.header('Content-Type', /application\\/json/);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Health check endpoint to verify service availability"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Generate Single Name (User Story 1)",
+			"item": [
+				{
+					"name": "POST /api/generate (valid)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is true\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Names is an array with 1 item\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(1);",
+									"});",
+									"",
+									"pm.test(\"Generated name is a non-empty string\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names[0]).to.be.a('string');",
+									"    pm.expect(jsonData.names[0].length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});",
+									"",
+									"pm.test(\"Message indicates success\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('generated');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"count\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate"
+							]
+						},
+						"description": "Generate a single popular pet name (User Story 1)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Generate by Animal Type (User Story 2)",
+			"item": [
+				{
+					"name": "POST /api/generate-by-animal-type (valid - Dog)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is true\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Names is an array with 1 item\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(1);",
+									"});",
+									"",
+									"pm.test(\"Generated name contains 'the' separator\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names[0]).to.include(' the ');",
+									"});",
+									"",
+									"pm.test(\"Message mentions animal type\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message.toLowerCase()).to.include('dog');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalType\": \"Dog\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-by-animal-type",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-by-animal-type"
+							]
+						},
+						"description": "Generate a pet name for a Dog (valid animal type)"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-by-animal-type (empty type)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is false\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Names array is empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(0);",
+									"});",
+									"",
+									"pm.test(\"Error message indicates required field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message.toLowerCase()).to.include('required');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 300ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalType\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-by-animal-type",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-by-animal-type"
+							]
+						},
+						"description": "Test validation: empty animal type should return 400 error"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-by-animal-type (contains numbers)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is false\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Names array is empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(0);",
+									"});",
+									"",
+									"pm.test(\"Error message indicates numeric validation\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message.toLowerCase()).to.include('numeric');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 300ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalType\": \"Dog123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-by-animal-type",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-by-animal-type"
+							]
+						},
+						"description": "Test validation: animal type with numbers should return 400 error"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-by-animal-type (unsupported type)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is false\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Names array is empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(0);",
+									"});",
+									"",
+									"pm.test(\"Error message indicates unsupported type\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message.toLowerCase()).to.include('not supported');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 300ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalType\": \"Dragon\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-by-animal-type",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-by-animal-type"
+							]
+						},
+						"description": "Test validation: unsupported animal type (Dragon) should return 400 error"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Generate Bulk Names (User Story 3)",
+			"item": [
+				{
+					"name": "POST /api/generate-bulk (count=1) - Boundary",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is true\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Names is an array with 1 item\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(1);",
+									"});",
+									"",
+									"pm.test(\"All names are non-empty strings\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    jsonData.names.forEach(name => {",
+									"        pm.expect(name).to.be.a('string');",
+									"        pm.expect(name.length).to.be.above(0);",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Message indicates count\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('1');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"count\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-bulk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-bulk"
+							]
+						},
+						"description": "Boundary value test: minimum valid count (1)"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-bulk (count=5) - Valid middle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is true\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Names is an array with 5 items\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(5);",
+									"});",
+									"",
+									"pm.test(\"All names are unique\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var uniqueNames = [...new Set(jsonData.names)];",
+									"    pm.expect(uniqueNames.length).to.eql(jsonData.names.length);",
+									"});",
+									"",
+									"pm.test(\"All names are non-empty strings\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    jsonData.names.forEach(name => {",
+									"        pm.expect(name).to.be.a('string');",
+									"        pm.expect(name.length).to.be.above(0);",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"count\": 5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-bulk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-bulk"
+							]
+						},
+						"description": "Valid middle value test: generate 5 names"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-bulk (count=10) - Boundary",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is true\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Names is an array with 10 items\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(10);",
+									"});",
+									"",
+									"pm.test(\"All names are non-empty strings\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    jsonData.names.forEach(name => {",
+									"        pm.expect(name).to.be.a('string');",
+									"        pm.expect(name.length).to.be.above(0);",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Message indicates count\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('10');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"count\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-bulk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-bulk"
+							]
+						},
+						"description": "Boundary value test: maximum valid count (10)"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-bulk (missing count)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is false\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Names array is empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(0);",
+									"});",
+									"",
+									"pm.test(\"Error message indicates count is required\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql('Count is required');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 300ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-bulk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-bulk"
+							]
+						},
+						"description": "Test validation: missing count parameter should return 400 error"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-bulk (count=0) - Below minimum",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is false\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Names array is empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(0);",
+									"});",
+									"",
+									"pm.test(\"Error message indicates minimum value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql('Count must be at least 1');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 300ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"count\": 0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-bulk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-bulk"
+							]
+						},
+						"description": "Boundary value test: count below minimum (0) should return 400 error"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-bulk (count=11) - Above maximum",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Success is false\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Names array is empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.names).to.have.lengthOf(0);",
+									"});",
+									"",
+									"pm.test(\"Error message indicates maximum value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql('Count cannot exceed 10');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 300ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"count\": 11\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-bulk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-bulk"
+							]
+						},
+						"description": "Boundary value test: count above maximum (11) should return 400 error"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. Recent Names (User Story 4)",
+			"item": [
+				{
+					"name": "GET /api/recent-names",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('count');",
+									"});",
+									"",
+									"pm.test(\"Success is true\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Names is an array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Count matches array length\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.count).to.eql(jsonData.names.length);",
+									"});",
+									"",
+									"pm.test(\"Names array contains at most 10 items\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.names.length).to.be.at.most(10);",
+									"});",
+									"",
+									"pm.test(\"Each name has required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.names.length > 0) {",
+									"        jsonData.names.forEach(record => {",
+									"            pm.expect(record).to.have.property('id');",
+									"            pm.expect(record).to.have.property('name');",
+									"            pm.expect(record).to.have.property('animal_type');",
+									"            pm.expect(record).to.have.property('count');",
+									"            pm.expect(record).to.have.property('created_at');",
+									"        });",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/recent-names",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"recent-names"
+							]
+						},
+						"description": "Retrieve 10 most recently generated pet names (User Story 4)"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
