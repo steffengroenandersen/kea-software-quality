@@ -20,7 +20,8 @@
       "Bash(npm test:*)",
       "Bash(tree:*)",
       "Bash(npx playwright install:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(npm run test:integration:*)"
     ],
     "deny": [],
     "ask": []
