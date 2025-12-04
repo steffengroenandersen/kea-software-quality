@@ -8,11 +8,41 @@
 <body>
   <h1>Pet Name Generator</h1>
   <p>Welcome to the Pet Name Generator!</p>
+
+  <div id="weather-widget">
+    <h3>Copenhagen Weather</h3>
+    <div id="weather-content">
+      <p>Loading weather...</p>
+    </div>
+  </div>
+
   <ul>
     <li><a href="/generate">Generate Popular Pet Name</a></li>
     <li><a href="/generate-by-animal-type">Generate Name by Animal Type</a></li>
     <li><a href="/generate-bulk">Generate 10 Names at Once</a></li>
     <li><a href="/recent-names">View Recent Generated Names</a></li>
   </ul>
+
+  <script>
+    const BACKEND_URL = 'http://localhost:4000';
+    const weatherContent = document.getElementById('weather-content');
+
+    async function fetchWeather() {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/weather`);
+        const data = await response.json();
+
+        if (data.success && data.temperature !== null) {
+          weatherContent.innerHTML = `<p><strong>Current Temperature:</strong> ${data.temperature}${data.unit}</p>`;
+        } else {
+          weatherContent.innerHTML = `<p><strong>Error:</strong> ${data.message || 'Unable to fetch weather'}</p>`;
+        }
+      } catch (error) {
+        weatherContent.innerHTML = `<p><strong>Error:</strong> Failed to connect to weather service</p>`;
+      }
+    }
+
+    fetchWeather();
+  </script>
 </body>
 </html>

@@ -6,6 +6,7 @@ import {
   generateBulkPetNames,
   getRecentGeneratedNames
 } from './src/controllers/petNameController.js';
+import { getWeather } from './src/controllers/weatherController.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -51,6 +52,12 @@ app.post('/api/generate-bulk', async (req, res) => {
 // API route for getting recent generated names (USER STORY 4)
 app.get('/api/recent-names', async (req, res) => {
   const result = await getRecentGeneratedNames();
+  res.status(result.statusCode).json(result.data);
+});
+
+// API route for getting weather in Copenhagen
+app.get('/api/weather', async (req, res) => {
+  const result = await getWeather();
   res.status(result.statusCode).json(result.data);
 });
 
