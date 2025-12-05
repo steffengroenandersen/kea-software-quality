@@ -1,0 +1,516 @@
+{
+	"info": {
+		"_postman_id": "b1c2d3e4-f5a6-7890-bcde-1234567890ab",
+		"name": "Pet Name Generator API - Basic Tests",
+		"description": "Basic scope API tests focusing only on: HTTP status codes, response structure, data types, and happy path validation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User Story 1 - Generate Single Name",
+			"item": [
+				{
+					"name": "POST /api/generate - Happy Path",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Data types are correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.a('boolean');",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.message).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"count\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate"
+							]
+						},
+						"description": "Generate a single popular pet name (User Story 1) - Happy path test"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Story 2 - Generate by Animal Type",
+			"item": [
+				{
+					"name": "POST /api/generate-by-animal-type - Happy Path (Dog)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Data types are correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.a('boolean');",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.message).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalType\": \"Dog\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-by-animal-type",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-by-animal-type"
+							]
+						},
+						"description": "Generate name for Dog - Happy path test"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-by-animal-type - Happy Path (Cat)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Data types are correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.a('boolean');",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.message).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalType\": \"Cat\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-by-animal-type",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-by-animal-type"
+							]
+						},
+						"description": "Generate name for Cat - Happy path test"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-by-animal-type - Invalid Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Data types are correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.a('boolean');",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.message).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalType\": \"Dragon\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-by-animal-type",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-by-animal-type"
+							]
+						},
+						"description": "Test with invalid animal type - Should return 400"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-by-animal-type - Empty Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Data types are correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.a('boolean');",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.message).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"animalType\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-by-animal-type",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-by-animal-type"
+							]
+						},
+						"description": "Test with empty animal type - Should return 400"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Story 3 - Generate Bulk Names",
+			"item": [
+				{
+					"name": "POST /api/generate-bulk - Happy Path (count=5)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Data types are correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.a('boolean');",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.message).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"count\": 5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-bulk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-bulk"
+							]
+						},
+						"description": "Generate 5 names - Happy path test"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-bulk - Invalid (count=0)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Data types are correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.a('boolean');",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.message).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"count\": 0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-bulk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-bulk"
+							]
+						},
+						"description": "Test with count=0 - Should return 400"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/generate-bulk - Invalid (count=11)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Data types are correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.a('boolean');",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.message).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"count\": 11\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/generate-bulk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"generate-bulk"
+							]
+						},
+						"description": "Test with count=11 (above max) - Should return 400"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Story 4 - Recent Names",
+			"item": [
+				{
+					"name": "GET /api/recent-names - Happy Path",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has correct structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('success');",
+									"    pm.expect(jsonData).to.have.property('names');",
+									"    pm.expect(jsonData).to.have.property('count');",
+									"});",
+									"",
+									"pm.test(\"Data types are correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.a('boolean');",
+									"    pm.expect(jsonData.names).to.be.an('array');",
+									"    pm.expect(jsonData.count).to.be.a('number');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/recent-names",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"recent-names"
+							]
+						},
+						"description": "Retrieve 10 most recently generated pet names (User Story 4) - Happy path test"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
