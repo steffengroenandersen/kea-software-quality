@@ -1,0 +1,159 @@
+name: CI - Backend Unit Tests, API Tests & E2E Tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  backend-unit-tests:
+    name: Backend Unit Tests
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: application/backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+          cache-dependency-path: application/backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: application/backend/coverage/
+          retention-days: 1
+
+  api-tests:
+    name: API Tests (Newman/Postman)
+    needs: backend-unit-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Start Docker Compose services
+        working-directory: application
+        run: |
+          docker compose up -d --build
+          docker compose ps
+
+      - name: Wait for services to be healthy
+        run: |
+          echo "Waiting for frontend (localhost:3000)..."
+          timeout 120 bash -c 'until curl -f http://localhost:3000 > /dev/null 2>&1; do sleep 2; done'
+
+          echo "Waiting for backend (localhost:4000/health)..."
+          timeout 120 bash -c 'until curl -f http://localhost:4000/health > /dev/null 2>&1; do sleep 2; done'
+
+          echo "All services are healthy!"
+
+      - name: Install Newman
+        run: npm install -g newman newman-reporter-htmlextra
+
+      - name: Run Postman Collection with Newman
+        run: |
+          newman run task-7-api-testing/Pet-Name-Generator-API.postman_collection.json \
+            -e task-7-api-testing/Pet-Name-Generator.postman_environment.json \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export newman-report.html
+
+      - name: Upload Newman HTML Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: newman-report
+          path: newman-report.html
+          retention-days: 7
+
+      - name: Stop Docker Compose services
+        if: always()
+        working-directory: application
+        run: docker compose down -v
+
+  e2e-tests:
+    name: E2E Tests (Playwright)
+    needs: api-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+          cache-dependency-path: task-8-end-to-end-ui-testing/package-lock.json
+
+      - name: Start Docker Compose services
+        working-directory: application
+        run: |
+          docker compose up -d --build
+          docker compose ps
+
+      - name: Wait for services to be healthy
+        run: |
+          echo "Waiting for frontend (localhost:3000)..."
+          timeout 120 bash -c 'until curl -f http://localhost:3000 > /dev/null 2>&1; do sleep 2; done'
+
+          echo "Waiting for backend (localhost:4000/health)..."
+          timeout 120 bash -c 'until curl -f http://localhost:4000/health > /dev/null 2>&1; do sleep 2; done'
+
+          echo "All services are healthy!"
+
+      - name: Install E2E test dependencies
+        working-directory: task-8-end-to-end-ui-testing
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: task-8-end-to-end-ui-testing
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright E2E tests
+        working-directory: task-8-end-to-end-ui-testing
+        run: npm test
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: task-8-end-to-end-ui-testing/playwright-report/
+          retention-days: 7
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-test-results
+          path: task-8-end-to-end-ui-testing/test-results/
+          retention-days: 7
+
+      - name: Stop Docker Compose services
+        if: always()
+        working-directory: application
+        run: docker compose down -v
